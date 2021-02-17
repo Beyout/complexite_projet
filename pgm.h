@@ -2,10 +2,6 @@
 #include <stdlib.h>
 #include "structFichier.h"
 
-/**********************File I/O functions*******************************/
-/***********************************************************************/
-
-/*Gets an ascii pgm image file, store as a color pgm.*/
 PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
 {
 	FILE *in_file;
@@ -38,17 +34,7 @@ PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
 		}
 		else
 		{
-			if (ligne < 50)
-			{
-				// Noir : 0
-				fichier->valeurs[i][j] = 0;
-			}
-			else
-			{
-				// Blanc : 255
-				fichier->valeurs[i][j] = 255;
-			}
-
+			fichier->valeurs[i][j] = ligne;
 			i++;
 		}
 		ligne = getc(in_file);
@@ -95,13 +81,4 @@ FILE *ouvreFichier(char *chemin)
 	}
 
 	return in_file;
-}
-
-int main(void)
-{
-	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
-	getPGMfile("dataset/1/single_0.pgm", fichier);
-
-	free(fichier);
-	return 0;
 }
