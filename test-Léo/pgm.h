@@ -18,10 +18,7 @@ typedef struct {unsigned char red;
   
 struct PGMstructure 
  {
-   int maxVal;
-   int width;
-   int height;
-   RGB_INT data[MAX][MAX];
+   int data[512][512];
 };
  
 typedef struct PGMstructure PGMImage;

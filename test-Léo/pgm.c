@@ -51,26 +51,30 @@ void getPGMfile (char filename[], PGMImage *img)
     //ligne  = getc(in_file);
     int temps =0;
     int longueur =0;
+    int i=0;
+    int j=0;
     while(!feof( in_file )){
 	if(longueur==512){
 		printf("\n");
 		printf("longueur -> %d\n", longueur);
-		if(temps==1){		
-			getchar();
-		}
-		temps=0;
 		longueur=0;
+		i++;
+		j=0;
 	}
 	else{	
-		if(ligne<50){
+		if(ligne<60){
 			printf("x");
-			temps=1;
+			printf("ici\n");
+			img->data[i][j] = 0;
 		}
 		else{
 			printf("o");
+			printf("la %d et %d\n", i, j);
+			img->data[i][j] = 255;
 		}
+		j++;
+		longueur++;
 	}
-	longueur++;
 	//printf("%d", ligne);
 	//printf("\n");
 	//sleep(1);
@@ -78,16 +82,45 @@ void getPGMfile (char filename[], PGMImage *img)
 
 	ligne  = getc(in_file);
     }
-    printf("\n");
-    printf("longueur -> %d\n", longueur);
   
     fclose(in_file);
     printf("\nDone reading file.\n");
   }
 
+void save(PGMImage *img)
+{
+     int i, j, nr, nc, k;
+     int red, green, blue;
+     FILE *iop;
+  
+     nr = 512;
+     nc = 512;
+      
+     iop = fopen("image1.pgm", "w");
+     fprintf(iop, "P6\n");
+     fprintf(iop, "%d %d\n", nc, nr);
+     fprintf(iop, "255\n");
+     printf("ici");
+     k = 1;
+     for(i = 512; i  > -1; i--)
+     {
+        for(j = 512; j >  -1; j--)
+        {
+           int gris = img->data[i][j];
+  	   putc(gris, iop);
+	   printf("tab[%d][%d] -> %d\n", i, j, gris);
+	   //getchar();
+        }
+     }     fprintf(iop, "\n");
+     fclose(iop);
+}
+
+
 int main(void){
 	PGMImage *img = malloc(sizeof(PGMImage));
 	getPGMfile ("radius_4.pgm", img);
+	printf("ici");
+	save(img);
 	free(img);
 	return 0;
 }
