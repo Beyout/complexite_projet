@@ -15,14 +15,16 @@ PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
 	in_file = ouvreFichier(chemin);
 	int ligne = getc(in_file);
 
-
 	// Entête du fichier
-	for (int i = 0; i < 3; i++)
+	int nbN = 0;
+	while (nbN < 3)
 	{
-		getc(in_file);
+		if (ligne == 10)
+		{
+			nbN++;
+		}
+		ligne = getc(in_file);
 	}
-	
-
 
 	int i = 0;
 	int j = 0;
@@ -61,11 +63,12 @@ PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
 /**
  * Ouvre le fichier dont le chemin est passé en paramètre, affiche les erreurs et terminent le programme s'il y en a.
  */
-FILE* ouvreFichier(char* chemin) {
+FILE *ouvreFichier(char *chemin)
+{
 	char ch;
 	int type;
 
-	FILE* in_file = fopen(chemin, "r");
+	FILE *in_file = fopen(chemin, "r");
 	if (in_file == NULL)
 	{
 		fprintf(stderr, "Error: Unable to open file %s\n\n", chemin);
@@ -98,7 +101,7 @@ int main(void)
 {
 	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
 	getPGMfile("dataset/1/single_0.pgm", fichier);
-	
+
 	free(fichier);
 	return 0;
 }
