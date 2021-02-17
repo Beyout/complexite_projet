@@ -1,5 +1,5 @@
-struct fichierStructure {
+struct PGMStructure {
 	int valeurs[512][512];
 };
 
-typedef struct fichierStructure fichierValeurs;
+typedef struct PGMStructure PGMValeurs;
