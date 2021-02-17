@@ -27,7 +27,7 @@ PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
 
 	while (ligne != -1)
 	{ /* skip to end of line*/
-		if ((char)ligne == '\n' || i == 512)
+		if (i == 512)
 		{
 			j++;
 			i = 0;
