@@ -1,16 +1,15 @@
 #include <math.h>
 #include "pgm.h"
 
-void dessineHistogramme(char *chemin)
+void construitHistogramme(int* histogramme, char *chemin)
 {
+
 	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
 	getPGMfile(chemin, fichier);
 
-	int tab[32];
-
 	for (int i = 0; i < 32; i++)
 	{
-		tab[i] = 0;
+		histogramme[i] = 0;
 	}
 
 	for (int i = 0; i < 512; i++)
@@ -18,16 +17,24 @@ void dessineHistogramme(char *chemin)
 		for (int j = 0; j < 512; j++)
 		{
 			int index = floor(fichier->valeurs[i][j] / 8);
-			tab[index]++;
+			histogramme[index]++;
 		}
 	}
 
-	for(int i = 0; i < 32; i++) {
-		
-	}
-
 	free(fichier);
-	return 0;
+}
+
+void dessineHistogramme(char *chemin)
+{
+	int tab[32];
+	construitHistogramme(tab, chemin);
+	for (int i = 0; i < 32; i++)
+	{
+		char *str = (char *)malloc(9 * sizeof(char));
+		sprintf(str, "[%3d-%3d[", 8 * i, 8 * (i + 1));
+		printf("%s %6d\n", str, tab[i]);
+		free(str);
+	}
 }
 
 int main(int argc, char const *argv[])

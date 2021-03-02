@@ -1,2 +1,17 @@
-pgm: pgm.c
-	gcc -Wall -o pgm pgm.c
+OBJS = histogramme.o
+OUT = histogramme
+
+SOURCE = histogramme.c
+HEADER = pgm.h
+
+FLAGS = -Wall
+CC = gcc
+
+all: $(OBJS)
+	$(CC) $(OBJS) -o $(OUT)
+
+$(OBJS): $(SOURCE)
+	$(CC) $(FLAGS) -c $(SOURCE)
+
+clean:
+	rm -f $(OBJS) $(OUT)
