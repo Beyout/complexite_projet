@@ -58,22 +58,13 @@ void getPGMfile(char *chemin, PGMValeurs *fichier)
 		ligne = getc(in_file);
 	}
 
-	int i = 0;
-	int j = 0;
-
-	while (ligne != -1)
-	{ /* skip to end of line*/
-		if (i == 512)
-		{
-			j++;
-			i = 0;
-		}
-		else
+	for (int i = 0; i < 512; i++)
+	{
+		for (int j = 0; j < 512; j++)
 		{
 			fichier->valeurs[i][j] = ligne;
-			i++;
+			ligne = getc(in_file);
 		}
-		ligne = getc(in_file);
 	}
 
 	fclose(in_file);
