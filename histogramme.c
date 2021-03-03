@@ -38,6 +38,6 @@ void dessineHistogramme(char *chemin)
 
 int main(int argc, char const *argv[])
 {
-	dessineHistogramme("dataset/1/single_0.pgm");
+	dessineHistogramme("dataset/3/defect_0.pgm");
 	return 0;
 }

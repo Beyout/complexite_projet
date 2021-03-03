@@ -4,59 +4,48 @@
 void construitFichierRondelle(char *chemin)
 {
 	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
-	getPGMfile(chemin, fichier);
-
-	for (int i = 0; i < 512; i++)
-	{
-		printf("LIGNE %d\n", i);
-		for (int j = 0; j < 512; j++)
-		{
-			printf("%4d", fichier->valeurs[i][j]);
-		}
-		printf("\n");
-	}
-	
+	getPGMfile(chemin, fichier);	
 
 	int xmin = 512;
 	int ymin = 512;
 	int xmax = 0;
 	int ymax = 0;
 
-	for (int y = 0; y < 512; y++)
+	for (int i = 0; i < 512; i++)
 	{
-		for (int x = 0; x < 512; x++)
+		for (int j = 0; j < 512; j++)
 		{
-			if(fichier->valeurs[y][x] == 0) {
-				if(x < xmin) {
-					xmin = x;
+			if(fichier->valeurs[i][j] < 48) {
+				if(j < xmin) {
+					xmin = j;
 				}
-				else if(x > xmax) {
-					xmax = x;
+				else if(j > xmax) {
+					xmax = j;
 				}
 				
-				if(y < ymin) {
-					printf("%d %d | %d\n", x, y, fichier->valeurs[y][x]);
-					ymin = y;
+				if(i < ymin) {
+					printf("x: %d y: %d\n", j, i);
+					ymin = i;
 				}
-				else if(y > ymax) {
-					ymax = y;
+				else if(i > ymax) {
+					ymax = i;
 				}
 			}
 		}
 		
 	}
-	
+	printf("%d\n", fichier->valeurs[327][326]);
 	printf("%d %d %d %d\n", xmin, xmax, ymin, ymax);
 
 	FILE* destination;
 	destination = fopen("rondelle.pgm", "w");
 	fprintf(destination, "P5\n");
-	fprintf(destination, "%d %d\n", xmax - xmin, ymax - ymin);
+	fprintf(destination, "%d %d\n", (xmax - xmin) + 1, (ymax - ymin) + 1);
 	fprintf(destination, "255\n");
 
-	for (int y = ymin; y < ymax; y++)
+	for (int y = ymin; y <= ymax; y++)
 	{
-		for (int x = xmin; x < xmax; x++)
+		for (int x = xmin; x <= xmax; x++)
 		{
 			int px = fichier->valeurs[y][x];
 			putc(px, destination);
@@ -68,6 +57,6 @@ void construitFichierRondelle(char *chemin)
 
 int main(int argc, char const *argv[])
 {
-	construitFichierRondelle("dataset/1/single_0.pgm");
+	construitFichierRondelle("dataset/3/defect_0.pgm");
 	return 0;
 }

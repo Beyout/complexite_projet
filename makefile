@@ -13,5 +13,8 @@ all: $(OBJS)
 $(OBJS): $(SOURCE)
 	$(CC) $(FLAGS) -c $(SOURCE)
 
+fichierRondelle: fichierRondelle.c
+	$(CC) $(FLAGS) -o fichierRondelle fichierRondelle.c pgm.h
+
 clean:
 	rm -f $(OBJS) $(OUT)
