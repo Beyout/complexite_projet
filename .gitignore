@@ -10,3 +10,4 @@
 .vscode
 *.pdf
 *.o
+*.pgm

@@ -1,9 +1,8 @@
 #include <math.h>
 #include "pgm.h"
 
-void construitHistogramme(int* histogramme, char *chemin)
+void construitHistogramme(int *histogramme, char *chemin)
 {
-
 	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
 	getPGMfile(chemin, fichier);
 

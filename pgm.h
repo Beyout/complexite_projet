@@ -39,7 +39,8 @@ FILE *ouvreFichier(char *chemin)
 	return in_file;
 }
 
-PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
+/** Récupére les valeurs des pixels et les met dans la structure fichier passée en paramètre dont on spécifie le chemin */
+void getPGMfile(char *chemin, PGMValeurs *fichier)
 {
 	FILE *in_file;
 
@@ -77,6 +78,4 @@ PGMValeurs getPGMfile(char *chemin, PGMValeurs *fichier)
 
 	fclose(in_file);
 	printf("\nDone reading file.\n");
-
-	return *fichier;
 }
