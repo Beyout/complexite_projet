@@ -3,7 +3,7 @@
 #include "structFichier.h"
 
 /**
- * Ouvre le fichier dont le chemin est passé en paramètre, affiche les erreurs et terminent le programme s'il y en a.
+ * @brief Ouvre le fichier dont le chemin est passé en paramètre, affiche les erreurs et termine le programme s'il y en a.
  */
 FILE *ouvreFichier(char *chemin)
 {
@@ -39,9 +39,15 @@ FILE *ouvreFichier(char *chemin)
 	return in_file;
 }
 
-/** Récupére les valeurs des pixels et les met dans la structure fichier passée en paramètre dont on spécifie le chemin */
-void getPGMfile(char *chemin, PGMValeurs *fichier)
+/**
+ * @brief Construit et retourne la structure PGMValeurs selon le fichier de chemin spécifié
+ * 
+ * @param chemin le chemin du fichier .pgm que l'on veut lire
+ * @return PGMValeurs* la structure correspondant au fichier .pgm 
+ */
+PGMValeurs *getPGMfile(char *chemin)
 {
+	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
 	FILE *in_file;
 
 	in_file = ouvreFichier(chemin);
@@ -69,4 +75,6 @@ void getPGMfile(char *chemin, PGMValeurs *fichier)
 
 	fclose(in_file);
 	printf("\nDone reading file.\n");
+
+	return fichier;
 }

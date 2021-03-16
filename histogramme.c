@@ -3,8 +3,7 @@
 
 void construitHistogramme(int *histogramme, char *chemin)
 {
-	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
-	getPGMfile(chemin, fichier);
+	PGMValeurs *fichier = getPGMfile(chemin);
 
 	for (int i = 0; i < 32; i++)
 	{
