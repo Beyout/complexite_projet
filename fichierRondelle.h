@@ -6,10 +6,10 @@
  * 
  * @param rondelle le tableau de la rondelle que l'on veut sauvegarder
  */
-void sauvegarderRondelle(const int **rondelle, const int longueur, const int hauteur)
+void sauvegarderRondelle(char *chemin, const int **rondelle, const int longueur, const int hauteur)
 {
 	FILE *destination;
-	destination = fopen("rondelle.pgm", "w");
+	destination = fopen(chemin, "w");
 	fprintf(destination, "P5\n");
 	fprintf(destination, "%d %d\n", longueur, hauteur);
 	fprintf(destination, "255\n");
@@ -38,7 +38,7 @@ void sauvegarderRondelle(const int **rondelle, const int longueur, const int hau
  * @param ymax la pointe est de la rondelle
  * 
  */
-void getDimensionsRondelle(PGMValeurs fichier, int *longueur, int *hauteur, int *xmin, int *ymin, int *xmax, int *ymax)
+void getDimensionsRondelle(PGMValeurs *fichier, int *longueur, int *hauteur, int *xmin, int *ymin, int *xmax, int *ymax)
 {
 	*xmin = 512;
 	*ymin = 512;
@@ -49,7 +49,7 @@ void getDimensionsRondelle(PGMValeurs fichier, int *longueur, int *hauteur, int 
 	{
 		for (int j = 0; j < 512; j++)
 		{
-			if (fichier.valeurs[i][j] < 48)
+			if (fichier->valeurs[i][j] < 48)
 			{
 				if (j < *xmin)
 				{
@@ -85,7 +85,7 @@ void getDimensionsRondelle(PGMValeurs fichier, int *longueur, int *hauteur, int 
  * @param longueur la longueur de la rondelle
  * @param hauteur l'hauteur de la rondelle
  */
-int **construitRondelle(PGMValeurs fichier, int *longueur, int *hauteur)
+int **construitRondelle(PGMValeurs *fichier, int *longueur, int *hauteur)
 {
 	int xmin, ymin, xmax, ymax;
 
@@ -104,7 +104,7 @@ int **construitRondelle(PGMValeurs fichier, int *longueur, int *hauteur)
 	{
 		for (int x = xmin; x <= xmax; x++)
 		{
-			int px = fichier.valeurs[y][x];
+			int px = fichier->valeurs[y][x];
 			rondelle[y - ymin][x - xmin] = px;
 		}
 	}
