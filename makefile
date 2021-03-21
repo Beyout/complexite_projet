@@ -1,20 +1,18 @@
-OBJS = histogramme.o
-OUT = histogramme
+OBJS = rayon.o
+OUT = rayon
 
-SOURCE = histogramme.c
-HEADER = pgm.h
+SOURCE = rayon.c
+HEADER = pgm.h histogramme.h fichierRondelle.h structFichier.h
 
 FLAGS = -Wall
+MATH = -lm
 CC = gcc
 
 all: $(OBJS)
-	$(CC) $(OBJS) -o $(OUT)
+	$(CC) $(OBJS) -o $(OUT) $(MATH)
 
 $(OBJS): $(SOURCE)
 	$(CC) $(FLAGS) -c $(SOURCE)
-
-rayon: rayon.c
-	$(CC) $(FLAGS) -o rayon rayon.c
 
 clean:
 	rm -f $(OBJS) $(OUT)

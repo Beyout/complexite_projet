@@ -1,12 +1,21 @@
 #include <string.h>
 #include <math.h>
-#include "pgm.h"
-#include "fichierRondelle.h"
 
-#define MAX 50
+/**
+ * @brief Nombre d'intervalles pour l'histogramme
+ */
 #define NB_INTERVALLES 32
+
+/**
+ * @brief Taille de l'ensemble d'un intervalle
+ */
 #define DIVISEUR 256 / NB_INTERVALLES
 
+/**
+ * @brief Construit l'histogramme et le renvoie
+ * 
+ * @param fichier le fichier pour lequel il faut construire l'histogramme
+ */
 int *construitHistogramme(PGMValeurs *fichier)
 {
 	int *histogramme = malloc(sizeof(int) * NB_INTERVALLES);
@@ -28,6 +37,11 @@ int *construitHistogramme(PGMValeurs *fichier)
 	return histogramme;
 }
 
+/**
+ * @brief Retourne l'index du plus petit intervalle
+ * 
+ * @param histogramme l'histogramme qu'il faut analyser
+ */
 int getIndexMin(int *histogramme)
 {
 	int min = 0;
@@ -43,10 +57,13 @@ int getIndexMin(int *histogramme)
 	return min;
 }
 
+/**
+ * @brief Calcule le seuil entre pixels blancs et noirs de l'histogramme
+ * @return int le seuil
+ */
 int getSeuil(int *histogramme)
 {
 	int min = histogramme[getIndexMin(histogramme)] + 10;
-	printf("min: %d\n", min);
 
 	int inf10Bas = -1;
 	int inf10Haut = -1;
@@ -71,6 +88,9 @@ int getSeuil(int *histogramme)
 	return (int)((inf10Bas + inf10Haut) / 2) * (DIVISEUR);
 }
 
+/**
+ * @brief Dessine l'histogramme du fichier passé en paramètre
+ */
 void dessineHistogramme(PGMValeurs *fichier)
 {
 	int *tab = construitHistogramme(fichier);
@@ -84,54 +104,4 @@ void dessineHistogramme(PGMValeurs *fichier)
 		free(str);
 	}
 	free(tab);
-}
-
-int main(int argc, char const *argv[])
-{
-	// char *chemin_fich = "dataset/3/defect_1.pgm";
-	// dessineHistogramme(chemin_fich);
-
-	PGMValeurs *fichier;
-
-
-	for (int i = 0; i < 10; i++)
-	{
-		char chemin_fich[MAX] = "dataset/3/defect_";
-		char c[10];
-		sprintf(c, "%d", i);
-		strcat(chemin_fich, c);
-		strcat(chemin_fich, ".pgm");
-		printf("\n%s\n", chemin_fich);
-
-		fichier = getPGMfile(chemin_fich);
-
-		int *tab = construitHistogramme(fichier);
-		int seuil = getSeuil(tab);
-		free(tab);
-
-		int longueur, hauteur;
-		int **rondelle = construitRondelle(fichier, &longueur, &hauteur);
-
-		for (size_t i = 0; i < hauteur; i++)
-		{
-			for (size_t j = 0; j < longueur; j++)
-			{
-				if (rondelle[i][j] < seuil)
-				{
-					printf("NNN");
-				}
-				else
-				{
-					printf("   ");
-				}
-			}
-			printf("\n");
-		}
-
-		printf("fin fichier\n");
-	}
-
-	free(fichier);
-
-	return 0;
 }

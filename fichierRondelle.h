@@ -38,7 +38,7 @@ void sauvegarderRondelle(char *chemin, const int **rondelle, const int longueur,
  * @param ymax la pointe est de la rondelle
  * 
  */
-void getDimensionsRondelle(PGMValeurs *fichier, int *longueur, int *hauteur, int *xmin, int *ymin, int *xmax, int *ymax)
+void getDimensionsRondelle(PGMValeurs *fichier, int *longueur, int *hauteur, int *xmin, int *ymin, int *xmax, int *ymax, int seuil)
 {
 	*xmin = 512;
 	*ymin = 512;
@@ -49,7 +49,7 @@ void getDimensionsRondelle(PGMValeurs *fichier, int *longueur, int *hauteur, int
 	{
 		for (int j = 0; j < 512; j++)
 		{
-			if (fichier->valeurs[i][j] < 48)
+			if (fichier->valeurs[i][j] < seuil)
 			{
 				if (j < *xmin)
 				{
@@ -85,11 +85,11 @@ void getDimensionsRondelle(PGMValeurs *fichier, int *longueur, int *hauteur, int
  * @param longueur la longueur de la rondelle
  * @param hauteur l'hauteur de la rondelle
  */
-int **construitRondelle(PGMValeurs *fichier, int *longueur, int *hauteur)
+int **construitRondelle(PGMValeurs *fichier, int *longueur, int *hauteur, int seuil)
 {
 	int xmin, ymin, xmax, ymax;
 
-	getDimensionsRondelle(fichier, longueur, hauteur, &xmin, &ymin, &xmax, &ymax);
+	getDimensionsRondelle(fichier, longueur, hauteur, &xmin, &ymin, &xmax, &ymax, seuil);
 
 	// Initialisation de la rondelle
 	int **rondelle = (int **)malloc(*hauteur * sizeof(*rondelle));
