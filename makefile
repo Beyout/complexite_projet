@@ -27,7 +27,7 @@ $(OUT_SAVE): $(OBJS_SAVE)
 	$(CC) $(OBJS) -o $(OUT_SAVE) $(FLAGS)
 
 $(OUT_TEST): $(OBJS_TEST)
-	$(CC) $(OBJS) -o $(OUT_TEST) $(FLAGS)
+	$(CC) $(OBJS_TEST) -o $(OUT_TEST) $(FLAGS)
 
 
 $(OBJS): $(SOURCE)

@@ -31,7 +31,7 @@ void test(char *chemin_fich, int index, int ***rondelles, int assertion)
 	for (int j = 0; j < nRondelles; j++)
 	{
 		// DETECTION DEFAUTS
-		int defaut = rondelleEstDefectueuse(rondelles[j], longueur[j], hauteur[j], largeur[i], seuil);
+		int defaut = rondelleEstDefectueuse(rondelles[j], longueur[j], hauteur[j], largeur[j], seuil);
 
 		if (defaut > 0)
 		{
