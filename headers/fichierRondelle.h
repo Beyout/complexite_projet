@@ -2,14 +2,13 @@
 #include <stdlib.h>
 
 #define MAX_RONDELLES 64
-#define SEUIL 96
 
 /**
  * @brief Sauvegarde la rondelle dans le fichier "rondelle.pgm"
  * 
  * @param rondelle le tableau de la rondelle que l'on veut sauvegarder
  */
-void sauvegarderRondelle(char *chemin, const int **rondelle, const int longueur, const int hauteur)
+void sauvegarderRondelle(char *chemin, const int **rondelle, const int longueur, const int hauteur, int seuil)
 {
 	FILE *destination;
 	destination = fopen(chemin, "w");
@@ -29,14 +28,26 @@ void sauvegarderRondelle(char *chemin, const int **rondelle, const int longueur,
 	fclose(destination);
 }
 
+/**
+ * @brief Cherche les dimensions d'une rondelle et les stock dans différents tableaux
+ * 
+ * @param x la coordonnée X de la rondelle
+ * @param y la coordonnée Y de la rondelle
+ */
 void getDimensionsRondelleUnique(PGMValeurs *fichier, int x, int y, int seuil, int *longueur, int *hauteur, int *largeur)
 {
 	*largeur = 0;
 
-	while (fichier->valeurs[y][x] < seuil)
+	while (fichier->valeurs[y][x] < seuil || *largeur < 17)
 	{
 		*largeur += 1;
 		y++;
+	}
+
+	while (fichier->valeurs[y - 1][x] > seuil)
+	{
+		y--;
+		*largeur -= 1;
 	}
 
 	int diametreInt = 0;
@@ -51,90 +62,12 @@ void getDimensionsRondelleUnique(PGMValeurs *fichier, int x, int y, int seuil, i
 	*hauteur = 2 * (*largeur) + diametreInt;
 }
 
-void scanPortion(PGMValeurs *fichier, int seuil, int x, int y, int xmax, int ymax, int *longueur, int *hauteur, int *largeur, int *tabX, int *tabY, int *nRondelles)
-{
-	int i = x;
-	int j = y;
-
-	while (j < ymax)
-	{
-		while (i < xmax)
-		{
-			if (fichier->valeurs[j][i] < seuil)
-			{
-				int estDejaTrouve = 0;
-				for (size_t i = 0; i < *nRondelles; i++)
-				{
-					int xmin = tabX[i] - (largeur[i] - 1) * 2;
-					int xmax = tabX[i] + (largeur[i] - 1) * 2;
-					int ymin = tabY[i];
-					int ymax = tabY[i] + hauteur[i] - 1;
-
-					if (j < ymax && j > ymin && x < xmax && x > xmin)
-					{
-						estDejaTrouve = 1;
-					}
-				}
-
-				if (estDejaTrouve != 1)
-				{
-					*nRondelles++;
-
-					int l, h, larg;
-
-					getDimensionsRondelleUnique(fichier, i, j, seuil, &l, &h, &larg);
-
-					longueur[*nRondelles] = l;
-					hauteur[*nRondelles] = h;
-					largeur[*nRondelles] = larg;
-					tabX[*nRondelles] = j;
-					tabY[*nRondelles] = i;
-
-					if (i - (larg - 1) * 2 > 0)
-					{
-						scanPortion(fichier, seuil, 0, y, i - (larg - 1) * 2, y + hauteur[*nRondelles], longueur, hauteur, largeur, tabX, tabY, nRondelles);
-					}
-					if (i + (larg - 1) * 2 < xmax)
-					{
-						scanPortion(fichier, seuil, i + (larg - 1), y, 512, y + hauteur[*nRondelles] - 1, longueur, hauteur, largeur, tabX, tabY, nRondelles);
-					}
-				}
-			}
-
-			i++;
-		}
-		i = x;
-		j++;
-	}
-}
-
-int getMax(int *tab)
-{
-	int max = -1;
-	int tmp = -1;
-
-	for (size_t i = 0; i < sizeof(tab); i++)
-	{
-		if (tab[i] > tmp)
-		{
-			tmp = tab[i];
-			max = i;
-		}
-	}
-
-	return max;
-}
-
 /**
- * @brief Obtient les dimensions de la rondelle
+ * @brief Obtient les dimensions des rondelles
  * 
  * @param fichier le fichier que l'on parcourt
- * @param longueur la longueur que l'on va modifier
- * @param hauteur l'hauteur que l'on va modifier
- * @param xmin la pointe nord de la rondelle
- * @param ymin la pointe ouest de la rondelle
- * @param xmax la pointe sud de la rondelle
- * @param ymax la pointe est de la rondelle
+ * @param tabX les coordonnées X des rondelles, utile pour les construire ensuite
+ * @param tabY les coordonnées Y des rondelles, utile pour les construire ensuite
  * 
  */
 int getDimensionsRondelles(PGMValeurs *fichier, int *longueur, int *hauteur, int *largeur, int *tabX, int *tabY, int seuil)
@@ -151,15 +84,16 @@ int getDimensionsRondelles(PGMValeurs *fichier, int *longueur, int *hauteur, int
 			if (fichier->valeurs[y][x] < seuil)
 			{
 				int estDejaTrouve = 0;
+				int xmin, xmax, ymin, ymax;
 
 				for (size_t i = 0; i < nRondelles; i++)
 				{
-					int xmin = tabX[i] - (largeur[i]) * 2;
-					int xmax = tabX[i] + (largeur[i]) * 2;
-					int ymin = tabY[i];
-					int ymax = tabY[i] + hauteur[i];
+					xmin = tabX[i] - largeur[i] - (hauteur[i] - 2 * largeur[i]) / 2;
+					xmax = tabX[i] + (largeur[i]) + (hauteur[i] - 2 * largeur[i]) / 2;
+					ymin = tabY[i];
+					ymax = tabY[i] + hauteur[i];
 
-					if (y < ymax && y > ymin && x < xmax && x > xmin)
+					if (y <= ymax && y >= ymin && x <= xmax && x >= xmin)
 					{
 						estDejaTrouve = 1;
 					}
@@ -190,6 +124,11 @@ int getDimensionsRondelles(PGMValeurs *fichier, int *longueur, int *hauteur, int
 	return nRondelles;
 }
 
+/**
+ * @brief Construit et renvoie une rondelle
+ * 
+ * @return int** la rondelle
+ */
 int **construitRondelleUnique(PGMValeurs *fichier, int longueur, int hauteur, int xmin, int xmax, int ymin, int ymax)
 {
 	int **rondelle = (int **)calloc(hauteur, sizeof(*rondelle));
@@ -213,12 +152,13 @@ int **construitRondelleUnique(PGMValeurs *fichier, int longueur, int hauteur, in
 
 /**
  * @brief Construit et retourne un tableau à 3 dimensions de rondelles, chaque rondelle étant un tableau à 2 dimensions.
- * Modifie les entiers longueur et hauteur qui sont les dimensions de la rondelle, 
- * ceci est utile car il n'y a pas d'autres moyens de connaître les dimensions de la rondelle autrement
+ * Ajoute les longueurs, hauteurs et largeurs des rondelles. 
+ * Ceci est utile car il n'y a pas d'autres moyens de connaître les dimensions de la rondelle autrement
  * 
  * @param fichier le fichier que l'on parcourt
- * @param longueur la longueur de la rondelle
- * @param hauteur la hauteur de la rondelle
+ * @param longueur les longueurs des rondelles
+ * @param hauteur les hauteur des rondelles
+ * @param largeur les largeurs des rondelles
  */
 int ***construitRondelles(PGMValeurs *fichier, int *longueur, int *hauteur, int *largeur, int seuil, int *nRondelles)
 {

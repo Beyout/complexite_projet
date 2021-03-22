@@ -5,7 +5,7 @@
 /**
  * @brief Ouvre le fichier dont le chemin est passé en paramètre, affiche les erreurs et termine le programme s'il y en a.
  */
-FILE *ouvreFichier(char *chemin)
+FILE *ouvreFichier(const char *chemin)
 {
 	char ch;
 	int type;
@@ -17,7 +17,7 @@ FILE *ouvreFichier(char *chemin)
 		exit(8);
 	}
 
-	printf("\nReading image file: %s\n", chemin);
+	// printf("\nReading image file: %s\n", chemin);
 
 	/*determine pgm image type (only type three can be used)*/
 	ch = getc(in_file);
@@ -45,7 +45,7 @@ FILE *ouvreFichier(char *chemin)
  * @param chemin le chemin du fichier .pgm que l'on veut lire
  * @return PGMValeurs* la structure correspondant au fichier .pgm 
  */
-PGMValeurs *getPGMfile(char *chemin)
+PGMValeurs *getPGMfile(const char *chemin)
 {
 	PGMValeurs *fichier = malloc(sizeof(PGMValeurs));
 	FILE *in_file;
@@ -74,7 +74,7 @@ PGMValeurs *getPGMfile(char *chemin)
 	}
 
 	fclose(in_file);
-	printf("\nDone reading file.\n");
+	// printf("\nDone reading file.\n");
 
 	return fichier;
 }
