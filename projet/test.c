@@ -172,6 +172,8 @@ int main(int argc, char const *argv[])
 	testDefect();
 	testMultipleRadius();
 	testMultipleDefect();
+
+	// Les deux derniers tests ne marchent pas car les rondelles sont trop proches.
 	testMultiple();
 
 	return 0;
